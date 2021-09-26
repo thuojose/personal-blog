@@ -4,6 +4,7 @@ from datetime import datetime
 from . import main
 from sqlalchemy import desc
 from ..models import Blog,User,Comment
+from ..request import get_quote
 from .forms import BlogForm, CommentForm, PostForm
 from flask_login import login_required, current_user
 
