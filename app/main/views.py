@@ -1,7 +1,7 @@
 from flask import Flask,render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy 
 from . import main
-from ..models import Blog
+from ..models import Blog,User
 from ..forms import CommentForm,Blogpost, PostForm
 from flask_login import login_required, current_user
 
@@ -48,3 +48,12 @@ def addpost():
         return redirect(url_for('main.index'))
 
     return render_template('new_blog.html', form=form)
+
+@main.route('/user/<uname>')
+def profile(uname):
+    user = User.query.filter_by(username=uname).first()
+
+    if user is None:
+        abort(404)
+
+    return render_template("profile.html", user=user)
