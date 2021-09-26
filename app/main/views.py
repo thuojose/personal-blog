@@ -4,7 +4,7 @@ from datetime import datetime
 from . import main
 from sqlalchemy import desc
 from ..models import Blog,User,Comment
-from ..forms import CommentForm,Blogpost, PostForm
+from .forms import BlogForm, CommentForm, PostForm
 from flask_login import login_required, current_user
 
 app = Flask(__name__)
@@ -25,7 +25,7 @@ def blogs():
 @main.route('/post/<int:post_id>')
 @login_required
 def post(post_id):
-    post = Blogpost.query.filter_by(id=post_id).first()
+    post = BlogForm.query.filter_by(id=post_id).first()
 
     return render_template('post.html', post=post)
 
