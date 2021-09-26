@@ -1,4 +1,4 @@
-from flask import Flask,render_template, request, redirect, url_for
+from flask import Flask,render_template, request, redirect, url_for,abort
 from flask_sqlalchemy import SQLAlchemy 
 from . import main
 from ..models import Blog,User
@@ -57,3 +57,7 @@ def profile(uname):
         abort(404)
 
     return render_template("profile.html", user=user)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
