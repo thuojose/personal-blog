@@ -1,87 +1,133 @@
-from flask import Flask,render_template, request, redirect, url_for,abort
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime 
+import os
+from flask import render_template, request,redirect,url_for,abort, flash
 from . import main
-from sqlalchemy import desc
-from ..models import Blog,User,Comment
-from ..request import get_quote
-from .forms import BlogForm, CommentForm, PostForm
+from ..models import User, Blogpost, Comment
+from .forms import SharePostForm, UpdateProfile,CommentForm
+from ..import db, photos
 from flask_login import login_required, current_user
-
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://khalyz:1234@localhost/blog'
+from ..requests import get_quote
 
 
-db = SQLAlchemy(app)
+#Views
 
+# home page
+@main.route('/')
+def index():
 
-@main.route('/blogs')
-@login_required
-def blogs():
-    all_blogs = Blog.query.order_by(db.desc(Blog.created_at)).limit(15)
+    '''
+    View root page function that returns the index page and its data
+    '''
+    quote = get_quote()
+    
+    title = 'Blog Busters'
+    return render_template('index.html', title=title, quote= quote)
 
-    return render_template('blogs.html', all_blogs=all_blogs)
-
-@main.route('/post/<int:post_id>')
-@login_required
-def post(post_id):
-    post = BlogForm.query.filter_by(id=post_id).first()
-
-    return render_template('post.html', post=post)
-
-@main.route('/post')
-def add():
-    return render_template('post.html')
-
-@main.route('/addblog', methods=['GET','POST'])
-@login_required
-def addpost():
-
-    form = PostForm()
-
+# share blogpost 
+@main.route('/sharepost', methods=['GET','POST'])
+def sharepost():
+    '''
+    View share post page function that returns the post sharing page and its data
+    '''
+    quote = get_quote()
+        
+    form = SharePostForm()
+    # blogposts = Blogpost.query.all()
+    
     if form.validate_on_submit():
-        title = form.title.data
-        content = form.content.data
+        blogpost = Blogpost(category=form.topic.data, blogpost=form.content.data)
+        db.session.add(blogpost)
+        db.session.commit()
+    
+        return redirect(url_for('main.goToBlogposts'))
+    
+    title = 'Blog Busters'
+    return render_template('sharepost.html', title=title, SharePostForm=form, quote=quote)
 
-        new_blog = Blog(title=title,
-                        content=content, user=current_user)
-
-        new_blog.save_blog()
-        return redirect(url_for('main.index'))
-
-    return render_template('new_blog.html', form=form)
-
+# user profile page
 @main.route('/user/<uname>')
 def profile(uname):
-    user = User.query.filter_by(username=uname).first()
+    user = User.query.filter_by(username = uname).first()
 
     if user is None:
         abort(404)
 
-    return render_template("profile.html", user=user)
+    title = 'Blog Busters: myProfile'
+    return render_template("profile/profile.html", user = user, title=title)
 
-
-@main.route('/post/comment/new/<int:id>', methods=['GET', 'POST'])
+# update profile page - update user bio
+@main.route('/user/<uname>/update',methods = ['GET','POST'])
 @login_required
-def new_comment(id):
-    form = CommentForm()
-    blog = Blog.query.filter_by(id=id).first()
+def update_profile(uname):
+    user = User.query.filter_by(username = uname).first()
+    if user is None:
+        abort(404)
+
+    form = UpdateProfile()
 
     if form.validate_on_submit():
-        content = form.content.data
+        user.bio = form.bio.data
 
-        new_comment = Comment(
-            blog_id=blog.id, comments=content, user=current_user)
+        db.session.add(user)
+        db.session.commit()
 
-        new_comment.save_comment()
-        print(new_comment)
-        return redirect(url_for('main.index', id=post.id))
+        return redirect(url_for('.profile',uname=user.username))
+    
+    title = 'Blog Busters'
+    return render_template('profile/update.html',form =form, user=user, title=title)
 
-    return render_template('new_comment.html', comment_form=form)
+# update prof pic
+@main.route('/user/<uname>/update/pic',methods= ['POST'])
+@login_required
+def update_pic(uname):
+    user = User.query.filter_by(username = uname).first()
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = f'photos/{filename}'
+        user.profile_pic_path = path
+        db.session.commit()
+    return redirect(url_for('main.profile',uname=uname))
 
 
+# Redirect to blogpost page
+@main.route('/blogposts', methods=['GET','POST'])
+def goToBlogposts():
+    '''
+    View blogposts page function that returns the pitches page and its details
+    '''   
+    TechSavyPosts = Blogpost.query.filter_by(category='TechSavy').all()
+    MoneySmartPosts = Blogpost.query.filter_by(category='MoneySmart').all()
+    LifenLaughterPosts = Blogpost.query.filter_by(category='Life & Laughter').all()
+    
+    comment_form = CommentForm()
+    # comments = Blogpost.query.filter_by(blogpost_id=id)
+    # comments = Comment.query.filter_by(blogpost_id=id).first()
+    comments = Comment.query.filter(Comment.blogpost_id > 0).all()
 
+    
+    title = 'Blog Busters'
+    return render_template('/blogposts.html', TechSavyPosts=TechSavyPosts, MoneySmartPosts=MoneySmartPosts, LifenLaughterPosts=LifenLaughterPosts, comments = comments, CommentForm=comment_form, title=title)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+#posting comments
+@main.route('/blogposts', methods = ['GET','POST'])
+def postComments():
+    '''
+    View comments function that returns the blogposts page with the posted comments
+    '''
+    print('===================================================')
+    
+    commentform = CommentForm()
+        
+    print('===================================================')
+    
+    if commentform.validate_on_submit():
+        comment = Comment(comment=commentform.comment.data, blogpost_id=3, users_id = 2)
+        print(comment)
+        print('===================================================')
+        db.session.add(comment)
+        db.session.commit()
+    
+        return redirect(url_for('main.goToBlogposts'))
+    
+    title='Blog Busters'
+    return render_template('/blogposts.html', TechSavyPosts=TechSavyPosts, MoneySmartPosts=MoneySmartPosts, LifenLaughterPosts=LifenLaughterPosts, comment = comment, CommentForm=comment_form, title=title)
+    

@@ -1,30 +1,53 @@
-<nav>
-  <div class="nav-wrapper pale-light brown">
-    <a href="/" class="brand-logo black-text ba-pl-1">Blog</a>
-    <a href="" data-target="mobile-side" class="sidenav-trigger black-text"><i class="material-icons">menu</i></a>
-    {% if current_user.is_authenticated %}
-    <ul class="right">
-      <li style="color: white;">{{current_user.username}}</li>
-      <li><a href="{{url_for('main.profile',uname=current_user.username)}}" class="black-text dropdown-trigger" data-target='account-drop'><i class="material-icons">account_circle</i></a></li>
-    </ul>
-    <ul id='account-drop' class='dropdown-content'>
-      <li><a href="/account">Account</a></li>
-      <li><a href="{{ url_for('auth.logout')}}">Logout</a></li>
-    </ul>
-    {% else %}
-      <a href="{{url_for('auth.login')}}" class = "right black-text">Sign in</a>
-    {%endif%}
-    <ul class="right hide-on-med-and-down">
-      <li style="color:darkcyan;"><a href="{{ url_for('auth.logout')}}">Logout</a></li>
-      <li><a href="/" class = "black-text">Home</a></li>
-      <li><a href="/blogs" class = "black-text">Blogs</a></li>
-      <li><a href="{{url_for('main.addpost')}}" rel="noopener noreferrer">
-          Add a Blog
-      </a></li>
-    </ul>
-  </div>
-</nav>
-<ul class="sidenav" id="mobile-side">
-  <li><a href="/" class = "black-text">Home</a></li>
-  <li><a href="" class = "black-text">Blogs</a></li>
-</ul>
+<!-- Navbar on every page -->
+  <div class="col-md-2">
+    <div class="sidebar">
+      <div class="menu-list">
+        <a class="" href="/"
+          ><i class="fa fa-fw fa-home"></i> Blog Busters</a
+        >
+        <div class="nav-item dropdown" id="dropDown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            data-target="#topics"
+            aria-haspopup="true"
+            aria-expanded="false"
+            ><i class="fa fa-fw fa fa-list-ol"></i>
+            Categories
+          </a>
+          <ul class="sub-menu collapse" id="topics">
+            <li class="dropdown-menu subMenu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{{url_for('main.goToBlogposts', _anchor='tech')}}">TechSavy</a>
+              <p class="dropdown-divider"></p>
+              <a class="dropdown-item" href="{{url_for('main.goToBlogposts', _anchor='money')}}">MoneySmart </a>
+              <p class="dropdown-divider"></p>
+              <a class="dropdown-item" href="{{url_for('main.goToBlogposts', _anchor='life')}}">Life & Laughter </a>
+              <p class="dropdown-divider"></p>
+            </li>
+          </ul>
+        </div>
+        {% if current_user.is_authenticated %}
+        <div>
+          <a href="{{url_for('main.sharepost')}}"
+            ><i class="fa fa-fw fa-commenting"></i> Share Your Blogs</a
+          >
+          <a href="{{url_for('main.profile',uname=current_user.username)}}"><i class="fa fa-fw fa-user"></i> My Profile </a>
+          <a href="{{url_for('auth.logout')}}"> <i class="fa fa-fw fa-sign-out"></i> Log out</a>
+          {% else %}
+          <a href="{{url_for('main.sharepost')}}"
+          ><i class="fa fa-fw fa-commenting"></i> Share Your Blogs</a
+        >
+          <a href="{{url_for('auth.register')}}"
+            ><i class="fa fa-fw fa-pencil-square"></i> Register</a
+          >
+          <a href="{{url_for('auth.login')}}"> <i class="fa fa-fw fa-sign-in"></i> Log in</a>
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
+  
+</div>

@@ -1,12 +1,27 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template,redirect,url_for,flash,request
 from . import auth
+from flask_login import login_user,logout_user,login_required
+from .forms import RegistrationForm,LoginForm
+from . import views,forms
 from ..models import User
-from .forms import LoginForm,SignupForm
 from .. import db
-from flask_login import login_user, logout_user, login_required
 
 
-@auth.route('/login', methods = ["GET", "POST"])
+@auth.route('/register',methods = ["GET","POST"])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(email = form.email.data, username = form.username.data,password = form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('auth.login'))
+        title = "New Account"
+        
+    title = "Blog Busters"
+    return render_template('auth/register.html',registration_form = form, title=title)
+
+
+@auth.route('/login',methods=['GET','POST'])
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
@@ -17,30 +32,12 @@ def login():
 
         flash('Invalid username or Password')
 
-    title = "Blog login"
-
+    title = "Blog Busters"
     return render_template('auth/login.html',login_form = login_form,title=title)
 
-@auth.route('/register', methods = ["GET", "POST"])
-def register():
-    form = SignupForm()
-    if form.validate_on_submit():
-        user = User(email = form.email.data, username = form.username.data, password = form.password.data)
-        db.session.add(user)
-        db.session.commit()
-
-    if form.validate_on_submit():
-        user = User(email = form.email.data, username = form.username.data, password = form.password.data)
-        db.session.add(user)
-        db.session.commit()
-
-        return redirect(url_for('auth.login'))
-        title = "New Account"
-    return render_template('auth/signup.html', signup_form = form)
 
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
-    flash('You have been Successfully logged out')
     return redirect(url_for("main.index"))

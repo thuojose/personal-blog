@@ -1,0 +1,17 @@
+{% extends 'base.html'%} {% import 'bootstrap/wtf.html' as wtf%} {% block
+content %}
+
+<!-- register -->
+<div class="homeDiv">
+  <div class="row justify-content-center register">
+    <div class="col-md-8">
+      <h4 class="lead">
+        <strong>Sign up for Blog Busters!</strong>
+      </h4>
+      <hr />
+      {{ wtf.quick_form(registration_form) }}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

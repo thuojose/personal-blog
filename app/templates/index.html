@@ -1,20 +1,76 @@
-{% extends 'base.html' %}
-
+{% extends 'base.html'%} 
+{% import 'bootstrap/wtf.html' as wtf%} 
 {% block content %}
-<div class="valign-wrapper ba-jumbotron">
-    <div class="container center-align">
-        <h2>BLOGGERS</h2>
-        <h4 class="grey-text">Every moment is a fresh beginning</h4>
-    </div>
+
+<div class="homeDiv">
+    <div class="">
+        <h3 class="homeHeading display-3">Blog Busters</h3>
+    
+        <div class="card">
+          <div class="card-header">
+            Random Quote 
+          </div>
+          
+          <div class="card-body">
+            <blockquote class="blockquote mb-0">
+              <p>{{quote.quote}}</p>
+              <footer class="blockquote-footer">
+                {{quote.author}} <cite title="Source Title"> sourced from: {{quote.permalink}}</cite>
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- blog posts -->
+  <div class="row">
+
+      <div class="col-md-4 forIpad">
+        <div class="card">
+          <h5 class="card-header"><a href="{{url_for('main.goToBlogposts', _anchor='tech')}}">TechSavy</a></h5>
+          <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">
+              With supporting text below as a natural lead-in to additional
+              content.
+            </p>
+            <a href="{{url_for('main.goToBlogposts',_anchor='tech')}}" class="btn btn-outline-primary">Read more...</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4  forIpad">
+          <div class="card">
+            <h5 class="card-header"><a href="{{url_for('main.goToBlogposts',_anchor='money')}}">MoneySmart </a></h5>
+            <div class="card-body">
+              <h5 class="card-title">Special title treatment</h5>
+              <p class="card-text">
+                With supporting text below as a natural lead-in to additional
+                content.
+              </p>
+              <a href="{{url_for('main.goToBlogposts',_anchor='money')}}" class="btn btn-outline-primary">Read more...</a>
+            </div>
+          </div>
+        </div>
+
+      <div class="col-md-4 forIpad">
+        <div class="card">
+          <h5 class="card-header"><a href="{{url_for('main.goToBlogposts',_anchor='life')}}">Life & Laughter </a></h5>
+          <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">
+              With supporting text below as a natural lead-in to additional
+              content.
+            </p>
+            <a href="{{url_for('main.goToBlogposts', _anchor='life')}}" class="btn btn-outline-primary">Read more...</a>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    <div >
 </div>
-<div class="container">
-    <h3 class="center"> Blogs</h3>
-    <hr>
-    <br>
-    <p class="center" style="font-size: 55px;">{{quote.quote}}</p>
-    <p class="center" style="font-size: 30px;"><strong>Author: </strong>{{quote.author}}</p>
-    <div class="row">
-      
-    </div>
 </div>
+
 {% endblock %}

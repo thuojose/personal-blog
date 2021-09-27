@@ -1,22 +1,16 @@
-<!DOCTYPE html>
-  <html style="background-image: url('https://images.pexels.com/photos/34070/pexels-photo.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500'); background-position: center;background-size: cover; height: 100vh;font-family: 'Acme', sans-serif;">
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>BLOGGERS</title>
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-      <link href="https://lh3.googleusercontent.com/proxy/2XOYGIvP32oSUwMc11WV3XzOyV88HNw5jYtVk068vuc3Qqdz-Es_a58jDAJNSmG7odJqj8CsXe_AHUx9K_7qwkLngx_18rPSp6GtexbgZ__kdoQGkpnM9Tc" rel="icon" type="image/x-icon" />
-      <link href="https://fonts.googleapis.com/css?family=Acme&display=swap" rel="stylesheet">
-    </head>
-    <body>
-      {% block navbar%}
-          {% include 'navbar.html' %}
-      {% endblock navbar%}
+{% extends 'bootstrap/base.html'%}
 
-      {% block content%}
+<!-- Styles/css block  -->
+{% block styles %}
+{{ super() }}
+<link href="https://fonts.googleapis.com/css?family=Baloo+Bhai|Comfortaa|Courgette|Katibeh|Philosopher|Tangerine|ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}">
+{% endblock %}
 
-      {% endblock content%}
-     
-    </body>
-  </html>
+<!-- Nav-bar block -->
+{% block navbar %}
+<!-- <div class="container-fluid blackBackground"> -->
+{% include 'navbar.html' %}
+<!-- </div> -->
+{% endblock %}

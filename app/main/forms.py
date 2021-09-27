@@ -1,17 +1,20 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, FileField, SubmitField
+from wtforms import SelectField,StringField,TextAreaField,SubmitField
 from wtforms.validators import Required
+from wtforms import ValidationError
 
-class BlogForm(FlaskForm):
-    title = StringField('Blog title', validators = [Required()])
-    content = TextAreaField('Blog content', validators = [Required()])
-    submit = SubmitField('Submit')
-
-class CommentForm(FlaskForm):
-    title = StringField('Comment title', validators = [Required()])
-    comment = TextAreaField('Comment review')
-    submit = SubmitField('Submit')
-
+class SharePostForm(FlaskForm):
+    '''
+    The blog-post sharing form
+    '''
+    topic = SelectField('', choices=[('TechSavy', 'TechSavy'), ('MoneySmart','MoneySmart'), ('Life & Laughter', 'Life & Laughter')], validators=[Required()])
+    content = TextAreaField('', validators=[Required()], render_kw={"placeholder": "Write your story here :)"})
+    submit = SubmitField('Share')
+    
 class UpdateProfile(FlaskForm):
-    bio = TextAreaField('Tell us about yourself.', validators = [Required()])
+    bio = TextAreaField('Tell us about you.',validators = [Required()])
     submit = SubmitField('Submit')
+    
+class CommentForm(FlaskForm):
+    comment = TextAreaField('',validators=[Required()], render_kw={"placeholder": "Post your comment here"})
+    submit = SubmitField('Post Comment')

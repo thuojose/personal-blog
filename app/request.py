@@ -1,15 +1,9 @@
 import urllib.request,json
+get_quote_url ='http://quotes.stormconsultancy.co.uk/random.json'
 
 def get_quote():
-    '''
-    Function to get random quote
-    '''
-
-    quote_url = 'http://quotes.stormconsultancy.co.uk/random.json'
-
-    with urllib.request.urlopen(quote_url) as url:
-        quote_data = url.read()
-        quote_response = json.loads(quote_data)
-
+    with urllib.request.urlopen(get_quote_url) as url:
+        get_quote_data = url.read()
+        get_quote_response = json.loads(get_quote_data)
         
-        return quote_response
+    return get_quote_response

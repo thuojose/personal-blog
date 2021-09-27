@@ -36,7 +36,7 @@ class DevConfig(Config):
     '''
     Development configuration for child class
     '''
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://khalyz:1234@localhost/blog'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://khalyz:1234@localhost/log'
     DEBUG = True
 
 config_options = {
