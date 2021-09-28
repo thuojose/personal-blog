@@ -1,11 +1,11 @@
 import os
-from flask import render_template, request,redirect,url_for,abort, flash
+from flask import Flask, render_template, request,redirect,url_for,abort 
 from . import main
 from ..models import User, Blogpost, Comment
 from .forms import SharePostForm, UpdateProfile,CommentForm
 from ..import db, photos
 from flask_login import login_required, current_user
-from ..requests import get_quote
+from ..request import get_quote
 
 
 #Views
@@ -113,6 +113,15 @@ def postComments():
     '''
     View comments function that returns the blogposts page with the posted comments
     '''
+    TechSavyPosts = Blogpost.query.filter_by(category='TechSavy').all()
+    MoneySmartPosts = Blogpost.query.filter_by(category='MoneySmart').all()
+    LifenLaughterPosts = Blogpost.query.filter_by(category='Life & Laughter').all()
+    
+    comment_form = CommentForm()
+    # comments = Blogpost.query.filter_by(blogpost_id=id)
+    # comments = Comment.query.filter_by(blogpost_id=id).first()
+    comment = Comment.query.filter(Comment.blogpost_id > 0).all()
+
     print('===================================================')
     
     commentform = CommentForm()
