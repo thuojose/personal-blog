@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request,redirect,url_for,abort 
+from flask import Flask, render_template, request,redirect,url_for,abort, flash
 from . import main
 from ..models import User, Blogpost, Comment
 from .forms import SharePostForm, UpdateProfile,CommentForm
@@ -109,17 +109,17 @@ def goToBlogposts():
 
 #posting comments
 @main.route('/blogposts', methods = ['GET','POST'])
-def postComments():
+def postComments(blogpost_id):
     '''
     View comments function that returns the blogposts page with the posted comments
     '''
-    TechSavyPosts = Blogpost.query.filter_by(category='TechSavy').all()
-    MoneySmartPosts = Blogpost.query.filter_by(category='MoneySmart').all()
-    LifenLaughterPosts = Blogpost.query.filter_by(category='Life & Laughter').all()
+    TechSavyPosts = Blogpost.query.filter_by(category='TechSavy').first()
+    MoneySmartPosts = Blogpost.query.filter_by(category='MoneySmart').first()
+    LifenLaughterPosts = Blogpost.query.filter_by(category='Life & Laughter').first()
     
     comment_form = CommentForm()
-    # comments = Blogpost.query.filter_by(blogpost_id=id)
-    # comments = Comment.query.filter_by(blogpost_id=id).first()
+    comment =Comment.query.filter_by(blogpost_id=id)
+    comment = Comment.query.filter_by(blogpost_id=id).first()
     comment = Comment.query.filter(Comment.blogpost_id > 0).all()
 
     print('===================================================')
@@ -129,7 +129,7 @@ def postComments():
     print('===================================================')
     
     if commentform.validate_on_submit():
-        comment = Comment(comment=commentform.comment.data, blogpost_id=3, users_id = 2)
+        comment = Comment(comment=commentform.comment.data, blogpost_id=blogpost_id, users_id=1)
         print(comment)
         print('===================================================')
         db.session.add(comment)
@@ -140,3 +140,25 @@ def postComments():
     title='Blog Busters'
     return render_template('/blogposts.html', TechSavyPosts=TechSavyPosts, MoneySmartPosts=MoneySmartPosts, LifenLaughterPosts=LifenLaughterPosts, comment = comment, CommentForm=comment_form, title=title)
     
+@main.route('/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete(id):
+    blog = Blogpost.query.get_or_404(id)
+    if blog.user != current_user:
+        abort(403)
+    db.session.delete(blog)
+    db.session.commit()
+    return redirect(url_for('main.goToBlogposts'))
+@main.route('/delete_comment/<int:comment_id>', methods=['GET', 'POST'])
+@login_required
+def delete_comment(comment_id):
+    comment =Comment.query.get_or_404(comment_id)
+    if (comment.user.id) != current_user.id:
+        abort(403)
+    db.session.delete(comment)
+    db.session.commit()
+    flash('comment succesfully deleted')
+    return redirect (url_for('main.goToBlogposts'))
+
+
+  

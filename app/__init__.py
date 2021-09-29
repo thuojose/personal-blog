@@ -23,9 +23,6 @@ def create_app(config_name):
     # Creating app configurations
     app.config.from_object(config_options[config_name])
 
-    # Setting up configuration
-    app.config.from_object(DevConfig)
-
     # Initializing Flask Extensions
     bootstrap.init_app(app)
     fa = FontAwesome(app)

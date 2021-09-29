@@ -52,6 +52,13 @@ class Blogpost(db.Model):
         db.session.add(self)
         db.session.commit()
     
+    def delete_blogpost(self):
+        db.session.delete(self)
+        db.session.commit()
+    
+    def get_blogpost(id):
+        blogpost=Blogpost.query.filter_by(id=id).first
+    
     def __repr__(self):
         return f'{self.blogpost}'
     
@@ -69,6 +76,15 @@ class Comment(db.Model):
         db.session.add(self)
         db.session.commit()
     
+    
+    def get_comments(cls, blog_id):
+        comments = Comment.query.filter_by(blogpost_id=blog_id).all()
+        return comments
+    
+    
+    def delete_comment(self):
+        db.session.delete(self)
+        db.session.commit()
     
     def __repr__(self):
         return f'{self.comment}, {self.users_id}, {self.blogpost_id}'
