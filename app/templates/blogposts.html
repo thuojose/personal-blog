@@ -1,121 +1,114 @@
-{% extends 'base.html' %} {% import 'bootstrap/wtf.html' as wtf %} {% block
-content %}
+{% extends 'base.html' %} {% import 'bootstrap/wtf.html' as wtf %} {% block content %}
 
 <div class="homeDiv">
-  <div class="row justify-content-center register">
-    <div class="col-md-10">
-      
-      <!-- TechSavy Blogposts -->
-      <div id="tech">
-        {% if TechSavyPosts %}
-        <h4>TechSavy Blogs</h4>
-        <hr />
-        {% for blogpost in TechSavyPosts %}
+    <div class="row justify-content-center register">
+        <div class="col-md-10">
 
-        <div class="">
-          <div class="card posts">
-            <div class="card-body">
-              {{ blogpost.blogpost }}
-              <hr />
-              <p class="comments">Comments</p>
-              {% for comment in comments %}
+            <!-- TechSavy Blogposts -->
+            <div id="tech">
+                {% if TechSavyPosts %}
+                <h4>TechSavy Blogs</h4>
+                <hr /> {% for blogpost in TechSavyPosts %}
 
-              {% if comment.blogpost_id == blogpost.id %}
-              <p>{{ comment.comment }}</p>
-              {% endif %}
+                <div class="">
+                    <div class="card posts">
+                        <div class="card-body">
+                            {{ blogpost.blogpost }}
+                            <hr />
+                            <a href="{{url_for('main.delete',id=blogpost.id)}}" class="btn">DELETE</a>
+                            <p class="comments">Comments</p>
+                            {% for comment in comments %} {% if comment.blogpost_id == blogpost.id %}
+                            <p>{{ comment.comment }}</p>
+                            {% endif %} {% endfor %}
+                        </div>
 
-              {% endfor %}
+                        <div>
+                            {{ wtf.quick_form(CommentForm) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div>
+                    <p>No TechSavy blogposts yet</p>
+                </div>
+
+                {% endif %}
             </div>
 
-            <div>
-              {{ wtf.quick_form(CommentForm) }}
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-        {% else %}
-        <div>
-          <p>No TechSavy blogposts yet</p>
-        </div>
+            <!-- MoneySmart Blogposts -->
+            <div id="money">
+                {% if MoneySmartPosts %}
+                <h4>MoneySmart Blog </h4>
+                <hr /> {% for blogpost in MoneySmartPosts %}
 
-        {% endif %}
-      </div>
+                <div class="">
+                    <div class="card posts">
+                        <div class="card-body">
+                            {{ blogpost.blogpost }}
+                            <hr />
+                            <a href="{{url_for('main.delete',id=blogpost.id)}}" class="btn">DELETE</a>
+                            <p class="comments">Comments</p>
+                            {% for comment in comments %}
 
-      <!-- MoneySmart Blogposts -->
-      <div id="money">
-        {% if MoneySmartPosts %}
-        <h4>MoneySmart Blog </h4>
-        <hr />
-        {% for blogpost in MoneySmartPosts %}
+                            <p>{{ comment.comment }}</p>
 
-        <div class="">
-          <div class="card posts">
-            <div class="card-body">
-              {{ blogpost.blogpost }}
-              <hr />
-              <p class="comments">Comments</p>
-              {% for comment in comments %}
+                            {% endfor %}
+                        </div>
 
-              <p>{{ comment.comment }}</p>
+                        <div>
+                            {{ wtf.quick_form(CommentForm) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div>
+                    <p>No MoneySmart blogposts yet</p>
+                </div>
 
-              {% endfor %}
-            </div>
-
-            <div>
-              {{ wtf.quick_form(CommentForm) }}
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-        {% else %}
-        <div>
-          <p>No MoneySmart blogposts yet</p>
-        </div>
-
-        {% endif %}
-      </div>
-
-      <!-- Life & Laughter Blogposts -->
-      <div id="life">
-        {% if LifenLaughterPosts %}
-        <h4>Life & Laughter Blog</h4>
-        <hr />
-        {% for blogpost in LifenLaughterPosts %}
-
-        <div class="">
-          <div class="card posts">
-            <div class="card-body">
-              {{ blogpost.blogpost }}
-              <hr />
-              <p class="comments">Comments</p>
-              {% for comment in comments %}
-
-              <p>{{ comment.comment }}</p>
-        <div class="col-md-4">
-            {%for comment in blogpost_comments%}
-            <p>{{comment.user.username}}</p>
-            <p>{{comment.comment}}</p>
-            <p>{{comment.date.strftime("%Y-%m-%d")}}</p>
-            <a href="{{url_for('main.delete_comment', comment_id=comment.id)}}"><button >Delete this Comment</button></a>
-            {%endfor%}
-              {% endfor %}
+                {% endif %}
             </div>
 
-            <div>
-              {{ wtf.quick_form(CommentForm) }}
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-        {% else %}
-        <div>
-          <p>No Life & Laughter blogposts yet</p>
-        </div>
+            <!-- Life & Laughter Blogposts -->
+            <div id="life">
+                {% if LifenLaughterPosts %}
+                <h4>Life & Laughter Blog</h4>
+                <hr /> {% for blogpost in LifenLaughterPosts %}
 
-        {% endif %}
-      </div>
+                <div class="">
+                    <div class="card posts">
+                        <div class="card-body">
+                            {{ blogpost.blogpost }}
+                            <hr />
+                            <a href="{{url_for('main.delete',id=blogpost.id)}}" class="btn">DELETE</a>
+                            <p class="comments">Comments</p>
+                            {% for comment in comments %}
+
+                            <p>{{ comment.comment }}</p>
+                            <div class="col-md-4">
+                                {%for comment in blogpost_comments%}
+                                <p>{{comment.user.username}}</p>
+                                <p>{{comment.comment}}</p>
+                                <p>{{comment.date.strftime("%Y-%m-%d")}}</p>
+                                <a href="{{url_for('main.delete_comment', comment_id=comment.id)}}"><button >Delete this Comment</button></a> {%endfor%} {% endfor %}
+                            </div>
+
+                            <div>
+                                {{ wtf.quick_form(CommentForm) }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div>
+                        <p>No Life & Laughter blogposts yet</p>
+                    </div>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-{% endblock %}
+    {% endblock %}
